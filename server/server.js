@@ -1,30 +1,35 @@
+import morgan from 'morgan';
+import mongoose from 'mongoose';
+import passport from 'passport';
 import path from 'path';
-import bodyParser from 'body-parser'
-import express from 'express'
-const app = express()
+import bodyParser from 'body-parser';
+import express from 'express';
+import session from 'express-session';
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: false }))
+import router from './router';
+import { databaseUrl } from './config/auth';
 
-const router = express.Router()
-const staticFiles = express.static(path.join(__dirname, '../../client/build'))
+const app = express();
 
-app.use(staticFiles)
+// Connect to mongoose
+mongoose.connect(databaseUrl);
 
-router.get('/cities', (req, res) => {
-  const cities = [
-    { name: 'Bhilai', population: 100000 },
-    { name: 'Pune', population: 240000 },
-    { name: 'Mumbai', population: 5000000 }
-  ]
-  res.json(cities)
-})
+// Server static files 
+const staticFiles = express.static(path.join(__dirname, '../../client/build'));
+app.use(staticFiles);
+app.use('/*', staticFiles);
 
-app.use(router)
+// Configure middleware
+app.use(morgan('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(session({ secret: 'wolololo', resave: false, saveUninitialized: true }));
+app.use(passport.initialize());
+app.use(passport.session());
 
-app.use('/*', staticFiles)
+// Configure routes
+router(app);
 
-app.set('port', process.env.PORT || 3001)
-app.listen(app.get('port'), () => {
-  console.log(`Listening on ${app.get('port')}`)
-})
+// Server setup
+app.set('port', process.env.PORT || 3001);
+app.listen(app.get('port'), () => console.log(`Listening on ${app.get('port')}`));
