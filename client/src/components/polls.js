@@ -15,16 +15,21 @@ class Polls extends Component {
     axios.get('/api/polls', { headers: { 'Cache-control': 'no-cache' } })
       .then(res => {
         self.setState({ pollList: res.data })
-        self.setState({ count: res.data.options.length || 999 })
+        self.setState({ count: res.data.options.length })
       })
-      .catch(err => console.log('Unable to get polls', err))
+      .catch(error => {
+        if (error.response) {
+          self.setState({ count: 0 })
+          console.log(error.response.data);
+        }
+      })
   }
 
 
   render() {
     return (
       <div>
-        <div className='jumbotron nopolls' style={{ display: this.state.count > 0 ? 'none' : 'block' }}>
+        <div className='jumbotron nopolls' style={{ display: this.state.count === 0 ? 'block' : 'none' }}>
           <h1>There are no polls to show</h1>
           <h1><Link className='nav-link' to='/newpoll' >Create one!</Link></h1>
         </div>

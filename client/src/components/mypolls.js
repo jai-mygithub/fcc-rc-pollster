@@ -7,7 +7,7 @@ class MyPolls extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { pollList: [], count: 999  }
+    this.state = { pollList: [], count: 999 }
   }
 
   componentDidMount() {
@@ -21,9 +21,13 @@ class MyPolls extends Component {
       })
       .then(res => {
         self.setState({ pollList: res.data })
+        self.setState({ count: res.data.options.length })
       })
-      .catch(err => {
-        console.log('Unable to get your polls', err);
+      .catch(error => {
+        if (error.response) {
+          self.setState({ count: 0 })
+          console.log(error.response.data);
+        }
       })
   }
 
@@ -31,8 +35,9 @@ class MyPolls extends Component {
   render() {
     return (
       <div>
-        <div className='jumbotron nopolls' style={{ display: this.state.count > 0 ? 'none' : 'null' }}>
-          <h1>There are no polls to show. <Link className='nav-link' to='/newpoll' >Create one!</Link></h1>
+        <div className='jumbotron nopolls' style={{ display: this.state.count === 0 ? 'block' : 'none' }}>
+          <h1>There are no polls to show</h1>
+          <h1><Link className='nav-link' to='/newpoll' >Create one!</Link></h1>
         </div>
         <ul className='list-group'>
           {this.state.pollList.map(poll => {

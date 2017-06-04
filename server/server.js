@@ -9,6 +9,8 @@ import session from 'express-session';
 import router from './router';
 import { databaseUrl } from './config/auth';
 
+require('dotenv').config();
+
 const app = express();
 
 // Connect to mongoose

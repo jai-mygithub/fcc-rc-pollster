@@ -6,6 +6,8 @@ node_modules
 # testing
 coverage
 
+.env
+
 # misc
 .DS_Store
 .yarnclean

@@ -16,7 +16,6 @@ import NewPoll from './components/newpoll';
 import SignIn from './components/signin';
 import SignOut from './components/signout';
 
-
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(reducers, composeEnhancers(
   applyMiddleware(reduxThunk)

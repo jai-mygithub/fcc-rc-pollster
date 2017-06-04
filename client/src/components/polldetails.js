@@ -15,8 +15,12 @@ class PollDetails extends Component {
       badgeColor: [],
       customVote: ''
     }
+  }
+
+  componentDidMount() {
     this.getPollDetails();
   }
+
 
   getPollDetails = () => {
     this.setState({
@@ -134,8 +138,11 @@ class PollDetails extends Component {
             <div className='btn-toolbar'>
               <button action='submit' className='btn btn-primary submit'>Submit</button>
               <a
-                className='twitter-share-button'
-                href={`https://twitter.com/intent/tweet?text=www.google.com`}>
+                type='button'
+                className='btn btn-secondary tweet'
+                target='_blank'
+                rel="noopener noreferrer"
+                href={`https://twitter.com/intent/tweet?text=Vote your opinion on : ${this.state.title} at ${window.location.href}`}>
                 Tweet
               </a>
               <button

@@ -28,8 +28,7 @@ class Header extends Component {
       return (
         [
           <li key={3} className='nav-item' >
-            <div><i className="fa fa-spinner fa-spin">no spinner but why</i></div>
-            <a className='nav-link' href='http://10.0.0.163:3000/api/signin/twitter' >Sign in with twitter</a>
+            <a className='nav-link' href='/api/signin/twitter' >Sign in with twitter</a>
           </li >
         ]
       )
