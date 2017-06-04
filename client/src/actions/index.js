@@ -3,18 +3,17 @@ import { AUTH_USER, UNAUTH_USER, AUTH_ERROR } from './types';
 
 export function signInUser(token, returnAfterLogin) {
   return function (dispatch) {
-    localStorage.setItem('token', token);
     axios.get('/api/profile', {
-      headers: { authorization: localStorage.getItem('token') }
+      headers: { authorization: token }
     })
       .then(res => {
+        localStorage.setItem('token', token);
         localStorage.setItem('displayName', res.data.displayName);
         localStorage.setItem('photo', res.data.photo);
         dispatch({ type: AUTH_USER });
-        console.log('Dispatched and LocalStorage set');
+        returnAfterLogin();
       })
       .catch(() => dispatch(authError('Login again please')));
-    returnAfterLogin();
   }
 }
 

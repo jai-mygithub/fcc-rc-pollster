@@ -5,8 +5,8 @@ import { connect } from 'react-redux';
 class Signout extends Component {
 
   componentDidMount() {
-    console.log('Sign out page');
     this.props.signOutUser();
+    window.location.replace('/');
   }
 
   render() {

@@ -42,7 +42,6 @@ passport.use(new TwitterStrategy({
   passReqToCallback: true
 },
   function (req, token, tokenSecret, profile, done) {
-    console.log('Twitter Strategy callback');
     User.findOne({ 'socialId': profile.id }, function (err, user) {
       if (err) { return done(err); }
       if (user) {

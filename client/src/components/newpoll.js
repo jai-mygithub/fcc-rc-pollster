@@ -1,42 +1,76 @@
 import React, { Component } from 'react';
+import { Field, reduxForm } from 'redux-form';
+import axios from 'axios';
 
 class NewPoll extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = { title: '' };
+  renderField = (field) => {
+    const { meta: { touched, error } } = field;
+    const className = `form-group ${touched && error ? 'has-danger' : ''}`;
+    return (
+      <fieldset className={className}>
+        <label>{field.label}</label>
+        {field.type === 'text' ? <input className='form-control' type={field.type} {...field.input} /> : <textarea className='form-control' type={field.type} {...field.input} />}
+        <div className='text-help'>{touched ? error : ''}</div>
+      </fieldset >
+    );
   }
 
-  formSubmit(e) {
-    console.log(1);
-    e.preventDefault();
-    fetch('/api/newpoll', {
-      method: "POST",
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Origin': '*'
-      },
-      body: JSON.stringify({ title: this.state.title })
-    })
-      .then(function (response) {
-        return response.json();
+  publishPoll = (title, options) => {
+    axios.post('/api/newpoll',
+      { title, options },
+      { headers: { authorization: localStorage.getItem('token') } }
+    )
+      .then(res => {
+        this.props.history.push(`/polls/${res.data.pollId}`);
       })
-      .then(function (data) {
-        console.log(data)
-      });
+      .catch(() => console.log('Unable to post'));
+  }
+
+  handleFormSubmit = ({ title, options }) => {
+    title = title.trim();
+    options = options.split('\n').filter(item => item.trim() !== '').map(item => {
+      const optionObj = { title: item, count: 0 };
+      return optionObj;
+    });
+    this.publishPoll(title, options);
   }
 
   render() {
+    const { handleSubmit } = this.props;
     return (
-      <div>
-        <form onSubmit={this.formSubmit.bind(this)} action=''>
-          <input type='text' name='title' onChange={event => this.setState({ title: event.target.value })} />
-          <button type='submit' className='btn btn-default'>Submit</button>
-        </form>
-      </div>
+      <form onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}>
+        <Field
+          label='Title'
+          name='title'
+          type='text'
+          component={this.renderField} />
+        <Field
+          label='Options (separate by lines)'
+          name='options'
+          type='textarea'
+          component={this.renderField} />
+        <button action='submit' className='btn btn-primary'>Publish</button>
+      </form>
     );
   }
 }
 
-export default NewPoll;
+function validate(values) {
+  const errors = {};
+
+  if (!values.title || values.title.trim().length < 1) { errors.title = "Enter a question for your poll"; }
+
+  if (!values.options) {
+    errors.options = "Enter you options";
+  } else {
+    var optionsArray = values.options.split('\n').filter(item => item.trim() !== '');
+    if (optionsArray.length < 2) { errors.options = "Enter at least 2 options"; }
+  }
+  return errors;
+}
+
+export default reduxForm({
+  validate,
+  form: 'newpoll'
+})(NewPoll);
