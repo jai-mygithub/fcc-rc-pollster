@@ -19,7 +19,6 @@ mongoose.connect(databaseUrl);
 // Server static files 
 const staticFiles = express.static(path.join(__dirname, '../../client/build'));
 app.use(staticFiles);
-app.use('/*', staticFiles);
 
 // Configure middleware
 app.use(morgan('dev'));
@@ -31,6 +30,7 @@ app.use(passport.session());
 
 // Configure routes
 router(app);
+app.use('/*', staticFiles);
 
 // Server setup
 app.set('port', process.env.PORT || 3001);
