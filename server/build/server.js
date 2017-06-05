@@ -36,6 +36,7 @@ var _auth = require('./config/auth');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+require('dotenv').config();
 var app = (0, _express2.default)();
 
 // Connect to mongoose
@@ -44,7 +45,6 @@ _mongoose2.default.connect(_auth.databaseUrl);
 // Server static files 
 var staticFiles = _express2.default.static(_path2.default.join(__dirname, '../../client/build'));
 app.use(staticFiles);
-app.use('/*', staticFiles);
 
 // Configure middleware
 app.use((0, _morgan2.default)('dev'));
@@ -56,6 +56,7 @@ app.use(_passport2.default.session());
 
 // Configure routes
 (0, _router2.default)(app);
+app.use('/*', staticFiles);
 
 // Server setup
 app.set('port', process.env.PORT || 3001);

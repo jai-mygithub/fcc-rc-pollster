@@ -1,5 +1,6 @@
 'use strict';
 
+require('dotenv').config();
 module.exports = {
   twitterAuth: {
     consumerKey: process.env.CONSUMERKEY,
