@@ -10,7 +10,6 @@ import router from './router';
 import { databaseUrl } from './config/auth';
 
 require('dotenv').config();
-
 const app = express();
 
 // Connect to mongoose
@@ -19,6 +18,7 @@ mongoose.connect(databaseUrl);
 // Server static files 
 const staticFiles = express.static(path.join(__dirname, '../../client/build'));
 app.use(staticFiles);
+
 
 // Configure middleware
 app.use(morgan('dev'));

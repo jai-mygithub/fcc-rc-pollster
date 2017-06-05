@@ -8,7 +8,7 @@ const TwitterStrategy = require('passport-twitter');
 
 function tokenForUser(user) {
   const timestamp = new Date().getTime();
-  return jwt.encode({ sub: user.id, iat: timestamp }, configAuth.secret);
+  return jwt.encode({ sub: user.id, iat: timestamp }, configAuth.SECRET);
 }
 
 // =========================================================================

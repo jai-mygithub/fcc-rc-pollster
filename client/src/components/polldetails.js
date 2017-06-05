@@ -147,7 +147,7 @@ class PollDetails extends Component {
               </a>
               <button
                 type='button'
-                style={{ visibility: this.props.authenticated ? 'visible' : 'gone' }}
+                style={{ display: this.props.authenticated ? 'inline-block' : 'none' }}
                 onClick={this.handleDeleteClick}
                 className='btn btn-danger pull-right delete'>
                 Delete
